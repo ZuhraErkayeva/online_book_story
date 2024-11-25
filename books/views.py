@@ -18,10 +18,15 @@ def book_list(request):
         books = Book.objects.all()
         serializer = BookSerializer(books, many=True,context={'request':request})
         return Response(serializer.data)
+
     elif request.method == 'POST':
         serializer = BookSerializer(data=request.data, context={'request': request})
+        author_id = request.data.get('author')
+        print(author_id)
+        author = get_object_or_404(Author, id=author_id)
         if serializer.is_valid():
-            serializer.save(author=request.user)
+            # author = get_object_or_404(Author, user=request.user)
+            serializer.save(author=author,user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

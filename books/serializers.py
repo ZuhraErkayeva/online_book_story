@@ -35,6 +35,10 @@ class BookSerializer(serializers.ModelSerializer):
             raise ValueError("ISBN must contain only numeric characters.")
         return isbn
 
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
+
 class OrderItemSerializer(serializers.ModelSerializer):
     subtotal = serializers.SerializerMethodField()
 

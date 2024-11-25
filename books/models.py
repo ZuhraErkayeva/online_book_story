@@ -5,6 +5,7 @@ class Author(models.Model):
     name = models.CharField(max_length=100)
     birth_date = models.DateField()
     biography = models.TextField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
@@ -12,6 +13,7 @@ class Book(models.Model):
     isbn = models.CharField(max_length=13, unique=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     stock = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='books')
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
@@ -20,7 +22,7 @@ class Order(models.Model):
     total_price = models.DecimalField(max_digits=8, decimal_places=2)
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE,related_name='items')
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     quantity = models.IntegerField()
 
